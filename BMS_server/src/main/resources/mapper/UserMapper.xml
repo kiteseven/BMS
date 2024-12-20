@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.kiteseven.bms_server.mapper.UserMapper">
+    <insert id="addUser">
+        insert into bms.user(role, username, phone_number, credit_status) VALUES(#{role},#{username},#{phoneNumber},#{creditStatus})
+    </insert>
+    <select id="getAllUser" resultType="org.kiteseven.bms_pojo.vo.UserVO">
+        select * from bms.user
+    </select>
+    <select id="getAllUserCount" resultType="Long">
+        select count(*) from bms.user
+    </select>
+    <select id="deleteUser">
+        delete from bms.user where user_id=#{id}
+    </select>
+    <update id="updateUser">
+        update bms.user
+        <set>
+            <if test="username!=null">username=#{username},</if>
+            <if test="phoneNumber!=null">phone_number=#{phoneNumber},</if>
+            <if test="creditStatus!=null">credit_status=#{creditStatus},</if>
+            <if test="role!=null">`role`=#{role},</if>
+        </set>
+        where user_id=#{userId}
+    </update>
+    <select id="getUserByUsername" resultType="org.kiteseven.bms_pojo.entity.User">
+        select * from bms.user where username=#{username}
+    </select>
+    <select id="getUserData" resultType="org.kiteseven.bms_pojo.vo.UserVO">
+        select * from bms.user where user_id=#{id}
+    </select>
+</mapper>

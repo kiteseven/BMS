@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.kiteseven.bms_server.mapper.RentalMapper">
+    <insert id="RentalBike">
+        insert into bms.rentals(bicycle_id, user_id, rent_time, rental_fee) VALUES (#{bicycleId},#{userId},#{rentTime},#{rentalFee})
+    </insert>
+    <select id="getRentals" resultType="org.kiteseven.bms_pojo.vo.RentalVO">
+        select * from bms.rentals
+    </select>
+    <select id="getRentalsCount" resultType="Long">
+        select COUNT(*) from bms.rentals
+    </select>
+    <update id="completeOrder">
+        update bms.rentals set status=1 , return_time=#{returnTime}  where rental_id=#{rentalId}
+    </update>
+    <update id="cancelOrder">
+        update bms.rentals set status=2 , return_time=#{returnTime} where rental_id=#{rentalId}
+    </update>
+    <select id="getRentalData" resultType="org.kiteseven.bms_pojo.vo.RentalVO">
+        select * from bms.rentals where rental_id=#{rentalId}
+    </select>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.kiteseven.bms_server.mapper.BicycleMapper">
+   <select id="getBicycle" resultType="org.kiteseven.bms_pojo.entity.Bicycles">
+       select * from bms.bicycles where bicycle_id=#{id}
+   </select>
+   <select id="getBicycles" resultType="org.kiteseven.bms_pojo.vo.BicyclesVO">
+       select * from bms.bicycles
+   </select>
+   <select id="getAllBicyclesCount" resultType="Long">
+       select count(*) from bms.bicycles
+   </select>
+   <insert id="addBicycles">
+       insert into bms.bicycles(model, location, status,rental_free)
+       VALUES(#{model},#{location},#{status},#{rentalFree})
+   </insert>
+   <update id="updateBicycle">
+       update bms.bicycles
+       <set>
+         <if test="model!=null">model=#{model},</if>
+         <if test="location!=null">location=#{location},</if>
+         <if test="status!=null">`status`=#{status},</if>
+         <if test="rentalFree!=null">rental_free=#{rentalFree},</if>
+       </set>
+       where bicycle_id=#{bicycleId}
+   </update>
+   <delete id="deleteBicycle">
+       delete from bms.bicycles where bicycle_id=#{id}
+   </delete>
+    <select id="getAvailableBike" resultType="org.kiteseven.bms_pojo.vo.BicyclesVO">
+        select * from bms.bicycles where status=1
+    </select>
+    <select id="getAvailableBikeCounts" resultType="Long">
+        select count(*) from bms.bicycles where status=1
+    </select>
+</mapper>

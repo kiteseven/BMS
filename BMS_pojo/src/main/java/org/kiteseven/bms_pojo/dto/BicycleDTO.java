@@ -1,0 +1,12 @@
+package org.kiteseven.bms_pojo.dto;
+
+import lombok.Data;
+
+@Data
+public class BicycleDTO {
+    private Integer bicycleId;
+    private String model;
+    private String location;
+    private Integer status;//是否可出租
+    private Double rentalFree;
+}
