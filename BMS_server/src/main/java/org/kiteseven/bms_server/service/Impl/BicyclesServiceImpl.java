@@ -3,6 +3,7 @@ package org.kiteseven.bms_server.service.Impl;
 import lombok.extern.slf4j.Slf4j;
 import org.kiteseven.bms_common.exception.BaseException;
 import org.kiteseven.bms_common.result.PageResult;
+import org.kiteseven.bms_common.utils.JDBCUtil;
 import org.kiteseven.bms_pojo.dto.BicycleDTO;
 import org.kiteseven.bms_pojo.dto.BicycleUpdateDTO;
 import org.kiteseven.bms_pojo.dto.BikeRentDTO;
@@ -21,12 +22,18 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
-public class BicyclesServiceImpl implements BicyclesService {
+public  class BicyclesServiceImpl implements BicyclesService{
     @Autowired
     BicycleMapper bicycleMapper;
     @Autowired
@@ -91,6 +98,8 @@ public class BicyclesServiceImpl implements BicyclesService {
         }
         bikeRentDTO.setRentalFee(bicycles.getRentalFree());
         bicycles.setStatus(2);
+        int rentalCount = bicycles.getRentalCount()+1;
+        bicycles.setRentalCount(rentalCount);
         BicycleUpdateDTO bicycleDTO =new BicycleUpdateDTO();
         BeanUtils.copyProperties(bicycles,bicycleDTO);
         rentalMapper.RentalBike(bikeRentDTO);
@@ -108,11 +117,14 @@ public class BicyclesServiceImpl implements BicyclesService {
     @Transactional
     public void completeOrder(Integer rentalId) {
         LocalDateTime returnTime =LocalDateTime.now();
-        rentalMapper.completeOrder(rentalId,returnTime);
         RentalVO rentalVO=rentalMapper.getRentalData(rentalId);
+        Duration totalTime=Duration.between(returnTime,rentalVO.getRentTime());
+        rentalMapper.completeOrder(rentalId,returnTime);
+
         BicycleUpdateDTO bicycles=new BicycleUpdateDTO();
         bicycles.setBicycleId(rentalVO.getBicycleId());
         bicycles.setStatus(1);
+
         bicycleMapper.updateBicycle(bicycles);
     }
 
@@ -126,5 +138,52 @@ public class BicyclesServiceImpl implements BicyclesService {
          bicycles.setBicycleId(rentalVO.getBicycleId());
          bicycles.setStatus(1);
          bicycleMapper.updateBicycle(bicycles);
+    }
+
+    @Override
+    public PageResult searchBike(String model,String location, Integer status) {
+        // 初始查询语句
+        StringBuilder sql = new StringBuilder("SELECT * FROM bicycles WHERE 1=1");
+
+        // 存放查询参数
+        List<Object> params = new ArrayList<>();
+
+        // 根据条件动态拼接查询
+        if (model != null && !model.trim().isEmpty()) {
+            sql.append(" AND model LIKE ?");
+            params.add("%" + model + "%");
+        }
+        if (location != null && !location.trim().isEmpty()) {
+            sql.append(" AND location LIKE ?");
+            params.add("%" + location + "%");
+        }
+        if (status != null) {
+            sql.append(" AND status = ?");
+            params.add(status);
+        }
+        List<BicyclesVO> bicyclesVOList=new ArrayList<>();
+        try(Connection connection=JDBCUtil.getConnection();
+            PreparedStatement preparedStatement= connection.prepareStatement(sql.toString())
+        ) {
+            for (int i = 0; i < params.size(); i++) {
+                preparedStatement.setObject(i + 1, params.get(i));
+            }
+            try(ResultSet resultSet=preparedStatement.executeQuery()) {
+                while (resultSet.next()){
+                    BicyclesVO bicyclesVO=new BicyclesVO(
+                            resultSet.getInt("bicycle_id"),
+                            resultSet.getString("model"),
+                            resultSet.getString("location"),
+                            resultSet.getInt("status"),
+                            resultSet.getDouble("rental_free"),
+                            resultSet.getInt("rental_count"));
+                    bicyclesVOList.add(bicyclesVO);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Long total= (long) bicyclesVOList.size();
+        return new PageResult(total,bicyclesVOList);
     }
 }

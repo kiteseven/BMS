@@ -1,6 +1,7 @@
 package org.kiteseven.bms_server.controller.admin;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.kiteseven.bms_common.result.PageResult;
 import org.kiteseven.bms_pojo.dto.BicycleDTO;
 import org.kiteseven.bms_pojo.dto.BicycleUpdateDTO;
@@ -12,7 +13,7 @@ import org.kiteseven.bms_common.result.Result;
 @Slf4j
 @RestController
 @RequestMapping("/bicyclesManage")//单车管理Controller
-public class BicycleManageController {
+public abstract class BicycleManageController {
     @Autowired
     BicyclesService bicyclesService;
 
@@ -55,11 +56,23 @@ public class BicycleManageController {
      * @param bicycleId
      * @return
      */
-    @DeleteMapping("delete/{bicycleId}")
+    @DeleteMapping("/delete/{bicycleId}")
     public Result deleteBicycle(@PathVariable Integer bicycleId){
         log.info("删除id为：{}的单车",bicycleId);
         bicyclesService.deleteBicycle(bicycleId);
         return Result.success();
     }
 
+    /**
+     *
+     * 管理端查询单车
+     * @param model
+     * @param location
+     * @param status
+     * @return
+     */
+    @GetMapping("/search")
+    public Result<PageResult> searchBike(@Param("model") String model, @Param("location") String location, @Param("status") Integer status){
+        return Result.success(bicyclesService.searchBike(model, location, status));
+    }
 }

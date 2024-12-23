@@ -82,6 +82,12 @@
             <artifactId>druid</artifactId>
             <version>1.2.8</version> <!-- 请根据你的项目需要使用合适版本 -->
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.3</version> <!-- 使用最新版本 -->
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

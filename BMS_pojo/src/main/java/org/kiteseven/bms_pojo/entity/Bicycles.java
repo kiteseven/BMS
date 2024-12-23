@@ -15,4 +15,5 @@ public class Bicycles implements Serializable {
     private String location;
     private Integer status;//是否可出租
     private Double rentalFree;
+    private Integer rentalCount;
 }

@@ -12,7 +12,7 @@ public class JDBCUtil {
         try {
             dataSource = new DruidDataSource();
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            dataSource.setUrl("jdbc:mysql://localhost:3306/BMS");
+            dataSource.setUrl("jdbc:mysql://localhost:3306/bms");
             dataSource.setUsername("root");
             dataSource.setPassword("240356ks");
             dataSource.setInitialSize(5); // 初始化连接池大小

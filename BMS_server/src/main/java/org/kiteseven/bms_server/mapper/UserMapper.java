@@ -1,6 +1,7 @@
 package org.kiteseven.bms_server.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.kiteseven.bms_pojo.dto.UserDTO;
 import org.kiteseven.bms_pojo.dto.UserUpdateDTO;
 import org.kiteseven.bms_pojo.entity.User;
@@ -22,5 +23,7 @@ public interface UserMapper {
     User getUserByUsername(String username);
 
     UserVO getUserData(Integer userid);
+    @Select("select * from bms.user where username like concat('%',#{username},'%')")
+    List<UserVO> searchUser(String username);
 
 }

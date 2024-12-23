@@ -24,4 +24,6 @@ public interface BicyclesService {
     void completeOrder(Integer rentalId);
 
     void cancelOrder(Integer rentalId);
+
+    PageResult searchBike(String model,String location, Integer status);
 }

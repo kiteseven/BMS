@@ -22,6 +22,7 @@
          <if test="location!=null">location=#{location},</if>
          <if test="status!=null">`status`=#{status},</if>
          <if test="rentalFree!=null">rental_free=#{rentalFree},</if>
+         <if test="rentalCount!=null">rental_count=#{rentalCount}</if>
        </set>
        where bicycle_id=#{bicycleId}
    </update>

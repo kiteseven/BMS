@@ -1,0 +1,8 @@
+Bicycle_Manage_system:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    host: localhost
+    port: 3306
+    database: BMS
+    username: root
+    password: 240356ks

@@ -6,7 +6,7 @@
         insert into bms.rentals(bicycle_id, user_id, rent_time, rental_fee) VALUES (#{bicycleId},#{userId},#{rentTime},#{rentalFee})
     </insert>
     <select id="getRentals" resultType="org.kiteseven.bms_pojo.vo.RentalVO">
-        select * from bms.rentals
+        select * from bms.rentals order by rental_id desc
     </select>
     <select id="getRentalsCount" resultType="Long">
         select COUNT(*) from bms.rentals

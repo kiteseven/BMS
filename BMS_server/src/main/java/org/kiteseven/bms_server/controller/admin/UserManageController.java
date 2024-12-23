@@ -1,6 +1,7 @@
 package org.kiteseven.bms_server.controller.admin;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.kiteseven.bms_common.result.PageResult;
 import org.kiteseven.bms_common.result.Result;
 import org.kiteseven.bms_pojo.dto.UserDTO;
@@ -56,5 +57,15 @@ public class UserManageController {
         log.info("管理端更新用户信息：{}",userUpdateDTO);
         userService.updateUser(userUpdateDTO);
         return Result.success();
+    }
+
+    /**
+     * 管理端查询用户
+     * @param username
+     * @return
+     */
+    @GetMapping("/search")
+    public Result<PageResult> searchUser(@Param("username") String username){
+        return Result.success(userService.searchUser(username));
     }
 }

@@ -22,4 +22,5 @@ public class RentalVO {
     private LocalDateTime returnTime;
     private Double rentalFee;
     private Integer status;
+    private Integer totalRentalTime;
 }

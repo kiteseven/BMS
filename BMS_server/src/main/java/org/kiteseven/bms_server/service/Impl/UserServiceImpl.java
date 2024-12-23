@@ -76,4 +76,11 @@ public class UserServiceImpl implements UserService {
     public UserVO getUserData(Integer userId) {
         return  userMapper.getUserData(userId);
     }
+
+    @Override
+    public PageResult searchUser(String username) {
+        List<UserVO> userVOS=userMapper.searchUser(username);
+        Long total= (long) userVOS.size();
+        return new PageResult(total,userVOS);
+    }
 }

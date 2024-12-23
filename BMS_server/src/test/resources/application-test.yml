@@ -1,0 +1,33 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  datasource:
+    driver-class-name: ${Bicycle_Manage_system.datasource.driver-class-name}
+    url: jdbc:mysql://${Bicycle_Manage_system.datasource.host}:${Bicycle_Manage_system.datasource.port}/${Bicycle_Manage_system.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${Bicycle_Manage_system.datasource.username}
+    password: ${Bicycle_Manage_system.datasource.password}
+
+mybatis:
+  #mapper????
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: org.kiteseven.entity
+  configuration:
+    #??????
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com:
+      sky:
+        mapper: debug
+        service: info
+        controller: info
+Bicycle_Manage_system:
+  jwt:
+    user-SecretKey-String: a_secure_key_for_kite_seven_user_with_more_than_32_chars
+    user-ttl: 7200000
+    user-token-name: authentication

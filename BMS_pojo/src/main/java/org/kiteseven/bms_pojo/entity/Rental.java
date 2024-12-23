@@ -17,4 +17,5 @@ public class Rental implements Serializable {
     private LocalDateTime rentTime;
     private LocalDateTime returnTime;
     private double rentalFee;
+    private Integer totalRentalTime;
 }

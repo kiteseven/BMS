@@ -18,4 +18,5 @@ public interface UserService {
     LoginVO userLogin(LoginDTO loginDTO);
 
     UserVO getUserData(Integer userId);
+    PageResult searchUser(String username);
 }
