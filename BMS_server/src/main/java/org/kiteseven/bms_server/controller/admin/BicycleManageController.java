@@ -13,7 +13,7 @@ import org.kiteseven.bms_common.result.Result;
 @Slf4j
 @RestController
 @RequestMapping("/bicyclesManage")//单车管理Controller
-public abstract class BicycleManageController {
+public class BicycleManageController {
     @Autowired
     BicyclesService bicyclesService;
 
