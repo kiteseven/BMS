@@ -70,6 +70,9 @@ public  class BicyclesServiceImpl implements BicyclesService{
             throw new BaseException("该单车不存在");
         }
         //这里还需要添加一个判断单车是否租出，租出不能删除
+        if(bicycles.getStatus()==2){
+            throw new BaseException("该单车出租中！");
+        }
         bicycleMapper.deleteBicycle(id);
     }
 
