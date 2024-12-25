@@ -66,6 +66,7 @@ public class UserManageController {
      */
     @GetMapping("/search")
     public Result<PageResult> searchUser(@Param("username") String username){
+        log.info("查询用户名为：{}的用户",username);
         return Result.success(userService.searchUser(username));
     }
 }
