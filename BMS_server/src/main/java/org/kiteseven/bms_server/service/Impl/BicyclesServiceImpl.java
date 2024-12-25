@@ -176,7 +176,8 @@ public  class BicyclesServiceImpl implements BicyclesService{
                             resultSet.getString("location"),
                             resultSet.getInt("status"),
                             resultSet.getDouble("rental_free"),
-                            resultSet.getInt("rental_count"));
+                            resultSet.getInt("rental_count"),
+                            resultSet.getString("bicycle_image"));
                     bicyclesVOList.add(bicyclesVO);
                 }
             }

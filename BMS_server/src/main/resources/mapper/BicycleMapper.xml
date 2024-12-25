@@ -12,8 +12,8 @@
        select count(*) from bms.bicycles
    </select>
    <insert id="addBicycles">
-       insert into bms.bicycles(model, location, status,rental_free)
-       VALUES(#{model},#{location},#{status},#{rentalFree})
+       insert into bms.bicycles(model, location, status,rental_free,bicycle_image)
+       VALUES(#{model},#{location},#{status},#{rentalFree},#{bicycleImage})
    </insert>
    <update id="updateBicycle">
        update bms.bicycles
@@ -22,7 +22,8 @@
          <if test="location!=null">location=#{location},</if>
          <if test="status!=null">`status`=#{status},</if>
          <if test="rentalFree!=null">rental_free=#{rentalFree},</if>
-         <if test="rentalCount!=null">rental_count=#{rentalCount}</if>
+         <if test="rentalCount!=null">rental_count=#{rentalCount},</if>
+         <if test="bicycleImage!=null">bicycle_image=#{bicycleImage},</if>
        </set>
        where bicycle_id=#{bicycleId}
    </update>
