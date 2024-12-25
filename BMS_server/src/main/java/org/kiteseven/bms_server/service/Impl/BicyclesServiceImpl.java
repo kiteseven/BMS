@@ -1,14 +1,19 @@
 package org.kiteseven.bms_server.service.Impl;
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.kiteseven.bms_common.exception.BaseException;
 import org.kiteseven.bms_common.result.PageResult;
+import org.kiteseven.bms_common.utils.BicycleStatusUtil;
 import org.kiteseven.bms_common.utils.JDBCUtil;
 import org.kiteseven.bms_pojo.dto.BicycleDTO;
 import org.kiteseven.bms_pojo.dto.BicycleUpdateDTO;
 import org.kiteseven.bms_pojo.dto.BikeRentDTO;
 import org.kiteseven.bms_pojo.entity.Bicycles;
-import org.kiteseven.bms_pojo.entity.User;
 import org.kiteseven.bms_pojo.vo.BicyclesVO;
 import org.kiteseven.bms_pojo.vo.RentalVO;
 import org.kiteseven.bms_pojo.vo.UserVO;
@@ -18,10 +23,11 @@ import org.kiteseven.bms_server.mapper.UserMapper;
 import org.kiteseven.bms_server.service.BicyclesService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -189,5 +195,52 @@ public  class BicyclesServiceImpl implements BicyclesService{
         }
         Long total= (long) bicyclesVOList.size();
         return new PageResult(total,bicyclesVOList);
+    }
+
+    @Override
+    public void exportBicycleData(HttpServletResponse response) {
+        // 查询所有单车数据
+        List<BicyclesVO> bicyclesList = bicycleMapper.exportBicyclesDataTop100();
+        // 获取 Excel 模板文件
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream("单车信息报表.xlsx");
+
+        try {
+            // 基于模板文件创建一个新的 Excel 文件
+            XSSFWorkbook excel = new XSSFWorkbook();
+            XSSFSheet sheet = excel.createSheet("单车信息");
+
+            // 创建标题行
+            XSSFRow headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("编号");
+            headerRow.createCell(1).setCellValue("型号");
+            headerRow.createCell(2).setCellValue("位置");
+            headerRow.createCell(3).setCellValue("状态");
+            headerRow.createCell(4).setCellValue("租赁价格");
+            headerRow.createCell(5).setCellValue("租赁次数");
+            // 获取表格文件的 Sheet 页
+
+            // 写入数据行
+            for (int i = 0; i < bicyclesList.size(); i++) {
+                BicyclesVO bicycle = bicyclesList.get(i);
+                XSSFRow row = sheet.createRow(i + 1);
+
+                row.createCell(0).setCellValue(bicycle.getBicycleId());
+                row.createCell(1).setCellValue(bicycle.getModel() != null ? bicycle.getModel() : "未知型号");
+                row.createCell(2).setCellValue(bicycle.getLocation() != null ? bicycle.getLocation() : "未知位置");
+                row.createCell(3).setCellValue(BicycleStatusUtil.getStatusText(bicycle.getStatus()));
+                row.createCell(4).setCellValue(bicycle.getRentalFree() != null ? bicycle.getRentalFree() : 0);
+                row.createCell(5).setCellValue(bicycle.getRentalCount() != null ? bicycle.getRentalCount() : 0);
+                row.createCell(6).setCellValue(bicycle.getBicycleImage() != null ? bicycle.getBicycleImage() : "无图片");
+            }
+            // 通过输出流将 Excel 文件写入客户端浏览器
+            ServletOutputStream out = response.getOutputStream();
+            excel.write(out);
+
+            // 关闭资源
+            out.close();
+            excel.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

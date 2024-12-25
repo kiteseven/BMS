@@ -21,5 +21,5 @@ public interface BicycleMapper {
  List<BicyclesVO> getAvailableBike();
 
  Long getAvailableBikeCounts();
-
+ List<BicyclesVO> exportBicyclesDataTop100();
 }

@@ -1,5 +1,6 @@
 package org.kiteseven.bms_server.controller.admin;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.kiteseven.bms_common.result.PageResult;
@@ -74,5 +75,9 @@ public class BicycleManageController {
     @GetMapping("/search")
     public Result<PageResult> searchBike(@Param("model") String model, @Param("location") String location, @Param("status") Integer status){
         return Result.success(bicyclesService.searchBike(model, location, status));
+    }
+    @GetMapping("/export")
+    public void export(HttpServletResponse response){
+        bicyclesService.exportBicycleData(response);
     }
 }

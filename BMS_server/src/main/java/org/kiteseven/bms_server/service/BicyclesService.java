@@ -1,5 +1,6 @@
 package org.kiteseven.bms_server.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.kiteseven.bms_common.result.PageResult;
 import org.kiteseven.bms_pojo.dto.BicycleDTO;
@@ -26,4 +27,6 @@ public interface BicyclesService {
     void cancelOrder(Integer rentalId);
 
     PageResult searchBike(String model,String location, Integer status);
+
+    void exportBicycleData(HttpServletResponse response);
 }

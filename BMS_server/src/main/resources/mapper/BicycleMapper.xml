@@ -36,4 +36,7 @@
     <select id="getAvailableBikeCounts" resultType="Long">
         select count(*) from bms.bicycles where status=1
     </select>
+    <select id="exportBicyclesDataTop100" resultType="org.kiteseven.bms_pojo.vo.BicyclesVO">
+        select * from bms.bicycles order by bicycles.rental_count DESC limit 0,100;
+    </select>
 </mapper>
