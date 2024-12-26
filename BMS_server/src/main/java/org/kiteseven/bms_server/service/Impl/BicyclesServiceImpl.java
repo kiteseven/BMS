@@ -201,14 +201,10 @@ public  class BicyclesServiceImpl implements BicyclesService{
     public void exportBicycleData(HttpServletResponse response) {
         // 查询所有单车数据
         List<BicyclesVO> bicyclesList = bicycleMapper.exportBicyclesDataTop100();
-        // 获取 Excel 模板文件
-        InputStream in = this.getClass().getClassLoader().getResourceAsStream("单车信息报表.xlsx");
-
         try {
             // 基于模板文件创建一个新的 Excel 文件
             XSSFWorkbook excel = new XSSFWorkbook();
             XSSFSheet sheet = excel.createSheet("单车信息");
-
             // 创建标题行
             XSSFRow headerRow = sheet.createRow(0);
             headerRow.createCell(0).setCellValue("编号");
@@ -218,12 +214,10 @@ public  class BicyclesServiceImpl implements BicyclesService{
             headerRow.createCell(4).setCellValue("租赁价格");
             headerRow.createCell(5).setCellValue("租赁次数");
             // 获取表格文件的 Sheet 页
-
             // 写入数据行
             for (int i = 0; i < bicyclesList.size(); i++) {
                 BicyclesVO bicycle = bicyclesList.get(i);
                 XSSFRow row = sheet.createRow(i + 1);
-
                 row.createCell(0).setCellValue(bicycle.getBicycleId());
                 row.createCell(1).setCellValue(bicycle.getModel() != null ? bicycle.getModel() : "未知型号");
                 row.createCell(2).setCellValue(bicycle.getLocation() != null ? bicycle.getLocation() : "未知位置");
@@ -235,7 +229,6 @@ public  class BicyclesServiceImpl implements BicyclesService{
             // 通过输出流将 Excel 文件写入客户端浏览器
             ServletOutputStream out = response.getOutputStream();
             excel.write(out);
-
             // 关闭资源
             out.close();
             excel.close();
