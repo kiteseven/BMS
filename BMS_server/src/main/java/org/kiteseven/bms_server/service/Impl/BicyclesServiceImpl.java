@@ -79,6 +79,7 @@ public  class BicyclesServiceImpl implements BicyclesService{
         if(bicycles.getStatus()==2){
             throw new BaseException("该单车出租中！");
         }
+        rentalMapper.deleteRentalByBikeId(id);
         bicycleMapper.deleteBicycle(id);
     }
 

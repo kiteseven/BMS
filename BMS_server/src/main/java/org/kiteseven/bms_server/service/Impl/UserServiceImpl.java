@@ -10,6 +10,7 @@ import org.kiteseven.bms_pojo.dto.UserUpdateDTO;
 import org.kiteseven.bms_pojo.entity.User;
 import org.kiteseven.bms_pojo.vo.LoginVO;
 import org.kiteseven.bms_pojo.vo.UserVO;
+import org.kiteseven.bms_server.mapper.RentalMapper;
 import org.kiteseven.bms_server.mapper.UserMapper;
 import org.kiteseven.bms_server.service.UserService;
 import org.springframework.beans.BeanUtils;
@@ -26,6 +27,8 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    RentalMapper rentalMapper;
     @Override
     public void addUser(UserDTO userDTO) {
         userMapper.addUser(userDTO);
@@ -40,6 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer id) {
+        rentalMapper.deleteRentalByUserId(id);
         userMapper.deleteUser(id);
     }
 
